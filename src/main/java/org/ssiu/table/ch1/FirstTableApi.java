@@ -5,7 +5,7 @@ import org.apache.flink.connector.datagen.table.DataGenConnectorOptions;
 
 import javax.swing.plaf.nimbus.State;
 
-import static org.apache.flink.table.api.Expressions.$;
+import static org.apache.flink.table.api.Expressions.*;
 
 public class FirstTableApi {
     public static void main(String[] args) {
@@ -16,6 +16,7 @@ public class FirstTableApi {
 
         TableEnvironment tEnv = TableEnvironment.create(settings);
 
+
         final TableDescriptor sourceDescriptor = TableDescriptor.forConnector("datagen")
                 .schema(Schema.newBuilder()
                         .column("f0", DataTypes.STRING())
@@ -24,15 +25,27 @@ public class FirstTableApi {
                 .build();
 
 
-        TableDescriptor sinkDescriptor = TableDescriptor.forConnector("print")
-                .schema(Schema.newBuilder()
-                        .column("f0", DataTypes.STRING())
-                        .build())
-                .build();
+
 
         tEnv.createTable("source_tb", sourceDescriptor);
 
+
+
+        final Table sourceTb = tEnv.from("source_tb");
+
+
+        final Table orders = sourceTb.addColumns($("f0").rowtime());
+
+
+        final Schema schema = Schema.newBuilder().fromResolvedSchema(orders.getResolvedSchema()).build();
+
+        // create output
+        TableDescriptor sinkDescriptor = TableDescriptor.forConnector("print")
+                .schema(schema)
+                .build();
         tEnv.createTable("print_table", sinkDescriptor);
+
+        orders.executeInsert("print_table");
 
     }
 }

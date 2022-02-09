@@ -88,6 +88,24 @@ under the License.
             <scope>${active.scope}</scope>
         </dependency>
 
+
+<!--        Connector-->
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-connector-kafka_${scala.binary.version}</artifactId>
+            <version>${flink.version}</version>
+            <scope>${active.scope}</scope>
+        </dependency>
+
+<!--        Format-->
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-csv</artifactId>
+            <version>${flink.version}</version>
+            <scope>${active.scope}</scope>
+        </dependency>
+
+
         <!-- Add connector dependencies here. They must be in the default scope (compile). -->
 
         <!-- Example:
@@ -246,7 +264,7 @@ under the License.
 			</properties>
 			<activation>
 				<!-- 设置默认激活这个配置 -->
-				<activeByDefault>true</activeByDefault>
+				<activeByDefault>false</activeByDefault>
 			</activation>
 		</profile>
     </profiles>
